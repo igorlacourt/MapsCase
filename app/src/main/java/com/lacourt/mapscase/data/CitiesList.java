@@ -1,6 +1,7 @@
 package com.lacourt.mapscase.data;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +15,8 @@ public class CitiesList {
     @Expose
     private Integer count;
     @Expose
-    private List<List> list = null;
+    @SerializedName("list")
+    private List<City> cities = null;
     @Expose
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
@@ -42,12 +44,12 @@ public class CitiesList {
         this.count = count;
     }
 
-    public List<List> getList() {
-        return list;
+    public List<City> getCities() {
+        return cities;
     }
 
-    public void setList(List<List> list) {
-        this.list = list;
+    public void setCities(List<City> cities) {
+        this.cities = cities;
     }
 
     public Map<String, Object> getAdditionalProperties() {

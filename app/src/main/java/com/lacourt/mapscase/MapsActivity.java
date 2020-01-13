@@ -63,7 +63,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onResponse(Call<CitiesList> call, Response<CitiesList> response) {
                         if(response.isSuccessful()){
                             Toast.makeText(MapsActivity.this, "Successful!", Toast.LENGTH_LONG).show();
-//                            Log.d("logrequest", "" + response.body());
+                            Log.d("logrequest", "" + response.body().getCities().get(0).getName());
+                            Log.d("logrequest", "" + response.body().getCities().get(0).getMain().getTempMax());
+                            Log.d("logrequest", "" + response.body().getCities().get(0).getMain().getTempMin());
+                            Log.d("logrequest", "" + response.body().getCities().get(0).getWeather().get(0).getDescription());
                         } else {
                             Toast.makeText(MapsActivity.this, "Http Error!", Toast.LENGTH_LONG).show();
                         }
@@ -212,7 +215,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                //save current location
 //                latLng = point;
 //
-//                List<Address> addresses = new ArrayList<>();
+//                City<Address> addresses = new ArrayList<>();
 //                try {
 //                    addresses = geocoder.getFromLocation(point.latitude, point.longitude,1);
 //                } catch (IOException e) {
