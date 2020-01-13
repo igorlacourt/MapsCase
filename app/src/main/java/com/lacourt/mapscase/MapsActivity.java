@@ -45,21 +45,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-//        setUpMapIfNeeded();
-    }
-
-    private void setUpMapIfNeeded() {
-        // Do a null check to confirm that we have not already instantiated the map.
-        if (mMap == null) {
-            // Try to obtain the map from the SupportMapFragment.
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-
-            if (mapFragment != null)
-                mapFragment.getMapAsync(this);
-
-
-        }
     }
 
     private void setUpMap() {
@@ -80,12 +65,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
-
-
-//         Add a marker in Sydney and move the camera
-//        LatLng sydney = new LatLng(-34, 151);
-//        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-//        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     private void onMapClick() {
@@ -174,6 +153,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
+
+//    private void setUpMapIfNeeded() {
+//        // Do a null check to confirm that we have not already instantiated the map.
+//        if (mMap == null) {
+//            // Try to obtain the map from the SupportMapFragment.
+//            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                    .findFragmentById(R.id.map);
+//
+//            if (mapFragment != null)
+//                mapFragment.getMapAsync(this);
+//
+//
+//        }
+//    }
 }
 
 //        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
