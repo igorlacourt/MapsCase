@@ -9,6 +9,10 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
@@ -22,6 +26,12 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.lacourt.mapscase.data.CitiesList;
+import com.lacourt.mapscase.network.ApiFactory;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -39,7 +49,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-//        geocoder = new Geocoder(this, Locale.getDefault());
+
+        Button btnSearch = (Button)findViewById(R.id.btn_search);
+        btnSearchClick(btnSearch);
+    }
+
+    private void btnSearchClick(Button btnSearch){
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ApiFactory().weatherApi.getCitiesList(-20.3119172, -40.2862623, 15).enqueue(new Callback<CitiesList>() {
+                    @Override
+                    public void onResponse(Call<CitiesList> call, Response<CitiesList> response) {
+                        if(response.isSuccessful()){
+                            Toast.makeText(MapsActivity.this, "Successful!", Toast.LENGTH_LONG).show();
+//                            Log.d("logrequest", "" + response.body());
+                        } else {
+                            Toast.makeText(MapsActivity.this, "Http Error!", Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CitiesList> call, Throwable t) {
+                        Toast.makeText(MapsActivity.this, "Failure!", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
     }
 
     @Override
