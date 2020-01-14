@@ -12,12 +12,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,16 +27,18 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.lacourt.mapscase.data.CitiesList;
-import com.lacourt.mapscase.network.ApiFactory;
+import com.lacourt.mapscase.data.City;
+import com.lacourt.mapscase.network.Resource;
+import com.lacourt.mapscase.viewmodel.MapViewModel;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.List;
+
+import static com.lacourt.mapscase.network.Resource.Status.*;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_REQUEST_CODE = 1;
+    private MapViewModel viewModel;
     private GoogleMap mMap;
     private LatLng latLng;
     private Marker marker;
@@ -50,33 +53,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Button btnSearch = (Button)findViewById(R.id.btn_search);
+        viewModel = ViewModelProviders.of(this).get(MapViewModel.class);
+        viewModel.cities.observe(this, new Observer<Resource<List<City>>>() {
+            @Override
+            public void onChanged(Resource<List<City>> cities) {
+                switch(cities.status) {
+                    case SUCCESS:
+                        for (int i = 0; i < cities.data.size(); i++){
+                            Log.d("requestlog", "cidade: " + cities.data.get(i).getName());
+                            Log.d("requestlog", "cidade: " + cities.data.get(i).getWeather().get(0).getDescription());
+                        }
+                        break;
+                    case LOADING:
+                        // code block
+                        break;
+                    case ERROR:
+                        // code block
+                        break;
+                    default:
+                        // code block
+                }
+
+            }
+        });
+        Button btnSearch = (Button) findViewById(R.id.btn_search);
         btnSearchClick(btnSearch);
     }
 
-    private void btnSearchClick(Button btnSearch){
+    private void btnSearchClick(Button btnSearch) {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new ApiFactory().weatherApi.getCitiesList(-20.3119172, -40.2862623, 15).enqueue(new Callback<CitiesList>() {
-                    @Override
-                    public void onResponse(Call<CitiesList> call, Response<CitiesList> response) {
-                        if(response.isSuccessful()){
-                            Toast.makeText(MapsActivity.this, "Successful!", Toast.LENGTH_LONG).show();
-                            Log.d("logrequest", "" + response.body().getCities().get(0).getName());
-                            Log.d("logrequest", "" + response.body().getCities().get(0).getMain().getTempMax());
-                            Log.d("logrequest", "" + response.body().getCities().get(0).getMain().getTempMin());
-                            Log.d("logrequest", "" + response.body().getCities().get(0).getWeather().get(0).getDescription());
-                        } else {
-                            Toast.makeText(MapsActivity.this, "Http Error!", Toast.LENGTH_LONG).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<CitiesList> call, Throwable t) {
-                        Toast.makeText(MapsActivity.this, "Failure!", Toast.LENGTH_LONG).show();
-                    }
-                });
+                viewModel.getCitiesList(-20.3119172, -40.2862623);
             }
         });
     }
@@ -91,11 +99,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         @SuppressLint("MissingPermission")
         Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double longitude = location.getLongitude();
         double latitude = location.getLatitude();
+        double longitude = location.getLongitude();
         final LatLng currentLocation = new LatLng(longitude, latitude);
 
         MarkerOptions markerOptions = new MarkerOptions()
@@ -135,7 +143,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void requestPermission(){
+    private void requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             setUpMap();
