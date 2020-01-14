@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -32,6 +34,7 @@ import com.lacourt.mapscase.network.Resource;
 import com.lacourt.mapscase.viewmodel.MapViewModel;
 
 import java.util.List;
+import java.util.Locale;
 
 import static com.lacourt.mapscase.network.Resource.Status.*;
 
@@ -57,11 +60,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         viewModel.cities.observe(this, new Observer<Resource<List<City>>>() {
             @Override
             public void onChanged(Resource<List<City>> cities) {
+                Log.d("requestlog", "MapsActivity, onChanged()");
                 switch(cities.status) {
                     case SUCCESS:
                         for (int i = 0; i < cities.data.size(); i++){
-                            Log.d("requestlog", "cidade: " + cities.data.get(i).getName());
-                            Log.d("requestlog", "cidade: " + cities.data.get(i).getWeather().get(0).getDescription());
+
                         }
                         break;
                     case LOADING:
@@ -99,12 +102,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mMap.getUiSettings().setMapToolbarEnabled(false);
 
+        LatLng currentLocation = new LatLng(-23.6821604,-46.8754915);
+
         LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        @SuppressLint("MissingPermission")
-        Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        final LatLng currentLocation = new LatLng(longitude, latitude);
+        if(lm != null){
+            @SuppressLint("MissingPermission")
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if(location != null){
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                currentLocation = new LatLng(longitude, latitude);
+            }
+        }
 
         MarkerOptions markerOptions = new MarkerOptions()
                 .position(currentLocation)
@@ -144,12 +153,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void requestPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             setUpMap();
             onMapClick();
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    LOCATION_REQUEST_CODE
+            );
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+
+        if (requestCode == LOCATION_REQUEST_CODE) {
+            if (permissions.length == 2 &&
+                    permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
+                    permissions[1].equals(Manifest.permission.ACCESS_COARSE_LOCATION) &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setUpMap();
+                onMapClick();
+            } else {
+                noPermissionDialog();
+            }
         }
     }
 
@@ -168,19 +197,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         requestPermission();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            if (permissions.length == 1 &&
-                    permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setUpMap();
-                onMapClick();
-            } else {
-                noPermissionDialog();
-            }
-        }
-    }
+
 
     private void noPermissionDialog() {
         new AlertDialog.Builder(this)

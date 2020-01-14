@@ -17,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiFactory {
     //Creating Auth Interceptor to add api_key query in front of all the requests.
-    private Interceptor getAuthInterceptor() {
+    private static Interceptor getAuthInterceptor() {
        Interceptor authInterceptor = new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
@@ -38,7 +38,7 @@ public class ApiFactory {
        return authInterceptor;
     }
 
-    private OkHttpClient loggingClient() {
+    private static OkHttpClient loggingClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.level(HttpLoggingInterceptor.Level.BODY);
 
@@ -50,13 +50,19 @@ public class ApiFactory {
                 .build();
     }
 
-    Retrofit retrofit = new Retrofit.Builder()
+     private static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(AppConstants.WEATHER_BASE_URL)
             .client(loggingClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build();
 
 
+    private static WeatherApi weatherApi = null;
 
-    public WeatherApi weatherApi = retrofit.create(WeatherApi.class);
+    public static WeatherApi getWeatherApi(){
+        if(weatherApi == null){
+            weatherApi = retrofit.create(WeatherApi.class);
+        }
+        return weatherApi;
+    }
 }

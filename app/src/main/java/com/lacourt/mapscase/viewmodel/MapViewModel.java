@@ -1,6 +1,7 @@
 package com.lacourt.mapscase.viewmodel;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -17,6 +18,7 @@ public class MapViewModel extends AndroidViewModel {
     }
 
     public void getCitiesList(double latitude, double longitude) {
+        Log.d("requestlog", "viewmodel, getCitiesList()");
         repository.getCitiesList(latitude, longitude);
     }
 }
