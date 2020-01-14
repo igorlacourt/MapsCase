@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +22,6 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
@@ -31,12 +29,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.lacourt.mapscase.data.City;
 import com.lacourt.mapscase.network.Resource;
+import com.lacourt.mapscase.ui.BottomSheetCities;
 import com.lacourt.mapscase.viewmodel.MapViewModel;
 
 import java.util.List;
-import java.util.Locale;
-
-import static com.lacourt.mapscase.network.Resource.Status.*;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -63,9 +59,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d("requestlog", "MapsActivity, onChanged()");
                 switch(cities.status) {
                     case SUCCESS:
-                        for (int i = 0; i < cities.data.size(); i++){
-
-                        }
+                        BottomSheetCities bottomSheet = new BottomSheetCities();
+                        bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
                         break;
                     case LOADING:
                         // code block
