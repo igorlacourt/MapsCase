@@ -19,6 +19,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,6 +34,7 @@ import com.lacourt.mapscase.network.Resource;
 import com.lacourt.mapscase.ui.BottomSheetCities;
 import com.lacourt.mapscase.viewmodel.MapViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -52,6 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        initCitiesList();
         viewModel = ViewModelProviders.of(this).get(MapViewModel.class);
         viewModel.cities.observe(this, new Observer<Resource<List<City>>>() {
             @Override
@@ -76,6 +80,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
         Button btnSearch = (Button) findViewById(R.id.btn_search);
         btnSearchClick(btnSearch);
+    }
+
+    private void initCitiesList() {
+        List<City> citiesList = new ArrayList<City>();
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_cities);
+        CitiesAdapter adapter = new CitiesAdapter(this, chatList);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void btnSearchClick(Button btnSearch) {
