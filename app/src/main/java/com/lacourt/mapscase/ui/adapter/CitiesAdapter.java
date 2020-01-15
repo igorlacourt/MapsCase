@@ -68,15 +68,19 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
 
         holder.cityName.setText(city.getName());
 
+        final String finalName = name;
+        final double finalMaxTemp = maxTemp;
+        final double finalMinTemp = minTemp;
+        final String finalDescription = description;
         holder.cityItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 cityClick.onCityClick(
-                        city.getName(),
-                        city.getMain().getTempMax(),
-                        city.getMain().getTempMin(),
-                        city.getWeather().get(0).getDescription()
+                        finalName,
+                        finalMaxTemp,
+                        finalMinTemp,
+                        finalDescription
                         );
 
             }
