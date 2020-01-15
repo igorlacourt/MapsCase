@@ -40,7 +40,6 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int LOCATION_REQUEST_CODE = 1;
-    private MapViewModel viewModel;
     private GoogleMap mMap;
     private LatLng latLng;
     private Marker marker;
@@ -55,46 +54,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        initCitiesList();
-        viewModel = ViewModelProviders.of(this).get(MapViewModel.class);
-        viewModel.cities.observe(this, new Observer<Resource<List<City>>>() {
-            @Override
-            public void onChanged(Resource<List<City>> cities) {
-                Log.d("requestlog", "MapsActivity, onChanged()");
-                switch(cities.status) {
-                    case SUCCESS:
-                        BottomSheetCities bottomSheet = new BottomSheetCities();
-                        bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
-                        break;
-                    case LOADING:
-                        // code block
-                        break;
-                    case ERROR:
-                        // code block
-                        break;
-                    default:
-                        // code block
-                }
-
-            }
-        });
         Button btnSearch = (Button) findViewById(R.id.btn_search);
         btnSearchClick(btnSearch);
-    }
-
-    private void initCitiesList() {
-        List<City> citiesList = new ArrayList<City>();
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv_cities);
-        CitiesAdapter adapter = new CitiesAdapter(this, chatList);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     private void btnSearchClick(Button btnSearch) {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewModel.getCitiesList(-20.3119172, -40.2862623);
+                BottomSheetCities bottomSheet = new BottomSheetCities();
+                bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
             }
         });
     }
@@ -204,13 +173,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         requestPermission();
     }
 
-
-
     private void noPermissionDialog() {
         new AlertDialog.Builder(this)
                 .setTitle("Sem permissão")
                 .setMessage("Você precisa conceder acesso à sua localização para que o app funcione.")
-
                 // Specifying a listener allows you to take an action before dismissing the dialog.
                 // The dialog is automatically dismissed when a dialog button is clicked.
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

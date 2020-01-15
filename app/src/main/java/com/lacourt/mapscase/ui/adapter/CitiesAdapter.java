@@ -12,18 +12,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lacourt.mapscase.R;
 import com.lacourt.mapscase.data.City;
+import com.lacourt.mapscase.data.Main;
+import com.lacourt.mapscase.data.Weather;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
     private Context context;
-    private ArrayList<City> cities;
+    private List<City> cities;
     private CityClick cityClick;
 
-    public CitiesAdapter(CityClick cityClick, ArrayList<City> cities) {
-        this.context = (Context) cityClick;
+    public CitiesAdapter(Context context, CityClick cityClick, List<City> cities) {
+        this.context = context;
+        this.cityClick = cityClick;
         this.cities = cities;
     }
 
@@ -36,16 +39,24 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
     @Override
     public void onBindViewHolder(@NonNull CityViewHolder holder, final int position) {
         final City city = cities.get(position);
+        Main main;
+        Weather weather;
+
+        if (city != null)
+
         holder.cityName.setText(city.getName());
+
         holder.cityItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 cityClick.onCityClick(
                         city.getName(),
                         city.getMain().getTempMax(),
                         city.getMain().getTempMin(),
                         city.getWeather().get(0).getDescription()
                         );
+
             }
         });
     }
@@ -55,7 +66,7 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
         return cities.size();
     }
 
-    public void setCities(ArrayList<City> cities) {
+    public void setCities(List<City> cities) {
         this.cities = cities;
     }
 
