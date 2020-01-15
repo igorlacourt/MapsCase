@@ -39,10 +39,32 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
     @Override
     public void onBindViewHolder(@NonNull CityViewHolder holder, final int position) {
         final City city = cities.get(position);
-        Main main;
-        Weather weather;
+        String name = "Nome da cidade não disponível";
+        double maxTemp = 0.0;
+        double minTemp = 0.0;
+        String description = "Descrição do clima não disponível";
 
-        if (city != null)
+        if (city != null) {
+            if(city.getName() != null) {
+                name = city.getName();
+            }
+            if(city.getMain() != null) {
+                if(city.getMain().getTempMax() != null){
+                    maxTemp = city.getMain().getTempMax();
+                }
+                if(city.getMain().getTempMin() != null) {
+                    minTemp = city.getMain().getTempMin();
+                }
+            }
+        }
+
+        if(city.getWeather() != null &&
+                city.getWeather().get(0) != null &&
+                city.getWeather().get(0).getDescription() != null &&
+                !city.getWeather().get(0).getDescription().isEmpty()
+        ){
+            description = city.getWeather().get(0).getDescription();
+        }
 
         holder.cityName.setText(city.getName());
 
