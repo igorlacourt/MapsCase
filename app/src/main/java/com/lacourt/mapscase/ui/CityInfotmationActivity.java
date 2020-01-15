@@ -27,10 +27,15 @@ public class CityInfotmationActivity extends AppCompatActivity {
         TextView minTemp = findViewById(R.id.tv_min_temp);
         TextView weatherDesrcription = findViewById(R.id.tv_weather_description);
 
-        cityName.setText(intent.getStringExtra(CITY_NAME));
-        maxTemp.setText(intent.getStringExtra(MAX_TEMP));
-        minTemp.setText(intent.getStringExtra(MIN_TEMP));
-        weatherDesrcription.setText(intent.getStringExtra(WEATHER_DESCRIPTION));
+        String sCityName = intent.getStringExtra(CITY_NAME);
+        double dMaxTemp = intent.getDoubleExtra(MAX_TEMP, 0.0);
+        double dMinTemp = intent.getDoubleExtra(MIN_TEMP, 0.0);
+        String sWeatherDescription = intent.getStringExtra(WEATHER_DESCRIPTION);
+
+        cityName.setText(sCityName);
+        maxTemp.setText(String.valueOf(dMaxTemp));
+        minTemp.setText(String.valueOf(dMinTemp));
+        weatherDesrcription.setText(sWeatherDescription);
     }
 
     public static void startCityInformationActivity(Activity activity){
