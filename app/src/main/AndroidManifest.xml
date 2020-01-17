@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lacourt.mapscase">
+    <!-- Required for connectivity access -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Required for location services -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+
+    <!-- Improves location accuracy and battery consumption -->
+    <uses-permission  android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
+
+    <!-- Allows the SDK to restart itself after the device is rebooted -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
+    <!-- For apps targeting Android Pie (28) and higher only -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <!-- For apps targeting Android 10 (29) and higher only -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
