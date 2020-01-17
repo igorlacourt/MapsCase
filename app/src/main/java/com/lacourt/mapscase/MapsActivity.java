@@ -58,7 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Button btnSearch = (Button) findViewById(R.id.btn_search);
         btnSearchClick(btnSearch);
-        initInLoco();
+
     }
 
     private void initInLoco() {
@@ -66,7 +66,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         InLocoEngagementOptions options = InLocoEngagementOptions.getInstance(this);
 
         // The App ID you obtained in the dashboard
-        options.setApplicationId("fb594773-caf1-4521-9066-fc9a9f25802f");
+        options.setApplicationId(BuildConfig.IN_LOCO_APP_ID);
 
         // Verbose mode; enables SDK logging, defaults to true.
         // Remember to set to false in production builds.
@@ -149,8 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            setUpMap();
-            onMapClick();
+            initialSetUp();
         } else {
             ActivityCompat.requestPermissions(
                     this,
@@ -158,6 +157,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     LOCATION_REQUEST_CODE
             );
         }
+    }
+
+    private void initialSetUp() {
+        setUpMap();
+        onMapClick();
+        initInLoco();
     }
 
     @Override
@@ -168,8 +173,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
                     permissions[1].equals(Manifest.permission.ACCESS_COARSE_LOCATION) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setUpMap();
-                onMapClick();
+                initialSetUp();
             } else {
                 noPermissionDialog();
             }

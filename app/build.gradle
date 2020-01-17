@@ -12,6 +12,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "WEATHER_API_KEY", WEATHER_API_KEY)
+        buildConfigField("String", "IN_LOCO_APP_ID", IN_LOCO_APP_ID)
     }
     buildTypes {
         release {
