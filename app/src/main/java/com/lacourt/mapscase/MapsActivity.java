@@ -29,6 +29,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.inlocomedia.android.engagement.InLocoEngagement;
+import com.inlocomedia.android.engagement.InLocoEngagementOptions;
 import com.lacourt.mapscase.data.City;
 import com.lacourt.mapscase.network.Resource;
 import com.lacourt.mapscase.ui.BottomSheetCities;
@@ -56,6 +58,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         Button btnSearch = (Button) findViewById(R.id.btn_search);
         btnSearchClick(btnSearch);
+        initInLoco();
+    }
+
+    private void initInLoco() {
+        // Set initialization options
+        InLocoEngagementOptions options = InLocoEngagementOptions.getInstance(this);
+
+        // The App ID you obtained in the dashboard
+        options.setApplicationId("fb594773-caf1-4521-9066-fc9a9f25802f");
+
+        // Verbose mode; enables SDK logging, defaults to true.
+        // Remember to set to false in production builds.
+        options.setLogEnabled(true);
+
+        //Initialize the SDK
+        InLocoEngagement.init(this, options);
     }
 
     private void btnSearchClick(Button btnSearch) {
