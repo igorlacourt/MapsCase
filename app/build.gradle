@@ -35,6 +35,18 @@ dependencies {
 
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
+    // Required
+    implementation 'com.inlocomedia.android:android-sdk-engagement:4.6.1'
+    implementation 'com.inlocomedia.android:android-sdk-location:4.6.1'
+    // If you prefer, you can use the following lines instead, so you can always
+    // have our latest hotfix
+    // compile 'com.inlocomedia.android:android-sdk-engagement:4.6.+'
+    // compile 'com.inlocomedia.android:android-sdk-location:4.6.+'
+
+    // Google Play Services
+    implementation 'com.google.android.gms:play-services-location:12.0.1'
+    implementation 'com.google.android.gms:play-services-ads:12.0.1'
+
     //    Retrofit
     implementation "com.squareup.retrofit2:retrofit:$retrofit2_version"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit2_version"
