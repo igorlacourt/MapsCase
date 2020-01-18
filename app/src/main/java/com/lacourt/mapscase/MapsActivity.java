@@ -162,14 +162,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void initialSetUp() {
         setUpMap();
         onMapClick();
-//        initInLoco();
+        initInLoco();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 
         if (requestCode == LOCATION_REQUEST_CODE) {
-            if (permissions.length == 2 &&
+            if (
+                    permissions.length == 2 &&
                     permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION) &&
                     permissions[1].equals(Manifest.permission.ACCESS_COARSE_LOCATION) &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
