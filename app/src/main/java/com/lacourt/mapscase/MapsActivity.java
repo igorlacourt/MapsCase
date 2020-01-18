@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -29,9 +30,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.inlocomedia.android.engagement.InLocoEngagement;
 import com.inlocomedia.android.engagement.InLocoEngagementOptions;
+import com.inlocomedia.android.engagement.request.FirebasePushProvider;
+import com.inlocomedia.android.engagement.request.PushProvider;
 import com.lacourt.mapscase.data.City;
+import com.lacourt.mapscase.firebasemessage.AppsMessageService;
 import com.lacourt.mapscase.network.Resource;
 import com.lacourt.mapscase.ui.BottomSheetCities;
 import com.lacourt.mapscase.viewmodel.MapViewModel;
@@ -146,6 +154,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
+    private void sendFCMTokenToInLoco(){
+        // Retrieve the Firebase token
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.d(AppsMessageService.TAG, "MapsActivity, getInstanceId failed", task.getException());
+                            return;
+                        }
+                        Log.d(AppsMessageService.TAG, "MapsActivity, getInstanceId successful");
+                        String token = null;
+                        // Get new Instance ID token
+                        if(task.getResult() != null)
+                            token = task.getResult().getToken();
+
+                        if (token != null && !token.isEmpty()) {
+                            Log.d(AppsMessageService.TAG,
+                                    "MapsActivity, sending token to InLoco... Token = " +
+                                    token
+                            );
+                            final PushProvider pushProvider = new FirebasePushProvider.Builder()
+                                    .setFirebaseToken(token)
+                                    .build();
+                            InLocoEngagement.setPushProvider(MapsActivity.this, pushProvider);
+                        }
+                    }
+                });
+    }
+
     private void requestPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -163,6 +201,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setUpMap();
         onMapClick();
         initInLoco();
+        sendFCMTokenToInLoco();
     }
 
     @Override

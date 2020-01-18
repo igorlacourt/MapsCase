@@ -13,6 +13,9 @@ import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.inlocomedia.android.engagement.InLocoEngagement;
+import com.inlocomedia.android.engagement.request.FirebasePushProvider;
+import com.inlocomedia.android.engagement.request.PushProvider;
 import com.lacourt.mapscase.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Random;
 
 public class AppsMessageService extends FirebaseMessagingService {
-    private final String TAG = "mymgstag";
+    public static final String TAG = "mymgstag";
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
@@ -32,7 +35,7 @@ public class AppsMessageService extends FirebaseMessagingService {
             );
 
         if (remoteMessage.getData().size() > 0) {
-            Log.d(this.TAG, "Message data payload: " + remoteMessage.getData());
+            Log.d(this.TAG, "AppsMessageService, Message data payload: " + remoteMessage.getData());
         }
     }
 
@@ -60,11 +63,22 @@ public class AppsMessageService extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setContentInfo("Info");
-        notificationManager.notify((new Random()).nextInt(), notificationBuilder.build());
+
+        if (notificationManager != null) {
+            notificationManager.notify((new Random()).nextInt(), notificationBuilder.build());
+        }
     }
 
     public void onNewToken(@NotNull String token) {
         super.onNewToken(token);
-        Log.d(this.TAG, "Refreshed token: " + token);
+        Log.d(TAG, "AppsMessageService, Refreshed token: " + token);
+        if (!token.isEmpty()) {
+            final PushProvider pushProvider = new FirebasePushProvider.Builder()
+                    .setFirebaseToken(token)
+                    .build();
+            Log.d(TAG, "AppsMessageService, Firebase pushProvider: " + pushProvider);
+            InLocoEngagement.setPushProvider(this, pushProvider);
+        }
     }
 }
+
