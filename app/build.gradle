@@ -40,7 +40,7 @@ dependencies {
 
     //Firebase
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
-
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
     // Required
     implementation 'com.inlocomedia.android:android-sdk-engagement:4.6.1'
     implementation 'com.inlocomedia.android:android-sdk-location:4.6.1'
