@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "310876849213",
+    "firebase_url": "https://maps-case.firebaseio.com",
+    "project_id": "maps-case",
+    "storage_bucket": "maps-case.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:310876849213:android:c8fce6b0a4194a64965654",
+        "android_client_info": {
+          "package_name": "com.lacourt.mapscase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "310876849213-5v8qj98642bfg8j4tff73lbffjnf57c1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lacourt.mapscase",
+            "certificate_hash": "f6adb193f366d9f9c2fbf12a5c72ef111de70ac9"
+          }
+        },
+        {
+          "client_id": "310876849213-1poed6q2ae4ffr6i0rc8nh90fd3jlt00.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0AdLs5awvrh5iT5fudnlzvq5Oo2C-cs8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "310876849213-1poed6q2ae4ffr6i0rc8nh90fd3jlt00.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

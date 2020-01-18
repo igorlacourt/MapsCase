@@ -162,7 +162,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void initialSetUp() {
         setUpMap();
         onMapClick();
-        initInLoco();
+//        initInLoco();
     }
 
     @Override
