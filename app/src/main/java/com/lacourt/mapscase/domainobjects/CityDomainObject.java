@@ -12,9 +12,13 @@ public class CityDomainObject {
         this.feelsLike = feelsLike.intValue();
         this.tempMin = tempMin.intValue();
         this.tempMax = tempMax.intValue();
-        this.description = description;
+        this.description = capitalizeFirstLetter(description);
         convertTempToCelsius();
         nullCheckFields();
+    }
+
+    private String capitalizeFirstLetter(String text) {
+        return text.substring(0,1).toUpperCase() + text.substring(1).toLowerCase();
     }
 
     private void convertTempToCelsius() {
