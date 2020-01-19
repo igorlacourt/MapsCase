@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -14,19 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.lacourt.mapscase.R;
-import com.lacourt.mapscase.data.City;
 import com.lacourt.mapscase.domainobjects.CityDomainObject;
 import com.lacourt.mapscase.network.Resource;
 import com.lacourt.mapscase.ui.adapter.CitiesAdapter;
 import com.lacourt.mapscase.ui.adapter.CityClick;
 import com.lacourt.mapscase.viewmodel.MapViewModel;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.lacourt.mapscase.network.Resource.Status.ERROR;
-import static com.lacourt.mapscase.network.Resource.Status.LOADING;
-import static com.lacourt.mapscase.network.Resource.Status.SUCCESS;
+import com.lacourt.mapscase.network.Error;
 
 public class BottomSheetCities extends BottomSheetDialogFragment implements CityClick {
     private static final String BUNDLE_LATITUTDE = "com.lacourt.mapscase.ui.latitude";
@@ -35,11 +34,15 @@ public class BottomSheetCities extends BottomSheetDialogFragment implements City
     private MapViewModel viewModel;
     private RecyclerView recyclerView;
     private CitiesAdapter adapter;
+    private ProgressBar loadingCities;
+    private TextView errorMessage;
 
     @Override
     public void setupDialog(@NonNull Dialog dialog, int style) {
         super.setupDialog(dialog, style);
         View contentView = View.inflate(getContext(), R.layout.bottom_sheet_cities_layout, null);
+        loadingCities = contentView.findViewById(R.id.pb_loading_cities);
+        errorMessage = contentView.findViewById(R.id.tv_error_message);
 
         initCitiesList(contentView);
 
@@ -63,15 +66,24 @@ public class BottomSheetCities extends BottomSheetDialogFragment implements City
             case SUCCESS:
                 Log.d("requestlog", "BottomSheet, case SUCCESS");
                 passDataToRecyclerView(cities.data);
+                loadingCities.setVisibility(View.INVISIBLE);
+                errorMessage.setVisibility(View.INVISIBLE);
                 break;
             case LOADING:
-                Log.d("requestlog", "BottomSheet, case SUCCESS");
+                Log.d("requestlog", "BottomSheet, case LOADING");
+                loadingCities.setVisibility(View.VISIBLE);
+                errorMessage.setVisibility(View.INVISIBLE);
                 break;
             case ERROR:
-                // code block
+                Log.d("requestlog", "BottomSheet, case ERROR: " + cities.error.getMessage());
+                loadingCities.setVisibility(View.INVISIBLE);
+                errorMessage.setText(cities.error.getMessage());
+                errorMessage.setVisibility(View.VISIBLE);
                 break;
             default:
-                // code block
+                loadingCities.setVisibility(View.INVISIBLE);
+                errorMessage.setText(Error.GENERIC);
+                errorMessage.setVisibility(View.VISIBLE);
         }
     }
 
