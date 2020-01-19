@@ -53,7 +53,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private double latitude;
     private double longitude;
-    private Marker marker;
+    private MarkerOptions marker;
     Geocoder geocoder;
 
     @Override
@@ -113,12 +113,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
 
-        MarkerOptions markerOptions = new MarkerOptions()
-                .position(currentLocation)
+        marker = new MarkerOptions()
+                .position(new LatLng(latitude, longitude))
                 .title("Local Escolhido");
 
-        mMap.addMarker(markerOptions);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mMap.addMarker(marker);
+        if(currentLocation != null)
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
     }
 
     private void onMapClick() {
@@ -127,19 +128,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onMapClick(LatLng latLng) {
-                // Creating a marker
-                MarkerOptions markerOptions = new MarkerOptions();
                 // Setting the position for the marker
-                markerOptions.position(latLng);
+                marker.position(latLng);
                 // Setting the title for the marker.
                 // This will be displayed on taping the marker
-                markerOptions.title(latLng.latitude + " : " + latLng.longitude);
+                marker.title(latLng.latitude + " : " + latLng.longitude);
                 // Clears the previously touched position
                 mMap.clear();
                 // Animating to the touched position
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
                 // Placing a marker on the touched position
-                mMap.addMarker(markerOptions);
+                mMap.addMarker(marker);
 
                 //set the current latitude and longitude
                 latitude = latLng.latitude;
@@ -214,15 +213,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -233,15 +223,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         new AlertDialog.Builder(this)
                 .setTitle("Sem permissão")
                 .setMessage("Você precisa conceder acesso à sua localização para que o app funcione.")
-                // Specifying a listener allows you to take an action before dismissing the dialog.
-                // The dialog is automatically dismissed when a dialog button is clicked.
                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         requestPermission();
                     }
                 })
-
-                // A null listener allows the button to dismiss the dialog and take no further action.
                 .setNegativeButton(android.R.string.no, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
