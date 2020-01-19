@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.lacourt.mapscase.R;
 import com.lacourt.mapscase.data.City;
+import com.lacourt.mapscase.domainobjects.CityDomainObject;
 import com.lacourt.mapscase.network.Resource;
 import com.lacourt.mapscase.ui.adapter.CitiesAdapter;
 import com.lacourt.mapscase.ui.adapter.CityClick;
@@ -21,6 +22,10 @@ import com.lacourt.mapscase.viewmodel.MapViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.lacourt.mapscase.network.Resource.Status.ERROR;
+import static com.lacourt.mapscase.network.Resource.Status.LOADING;
+import static com.lacourt.mapscase.network.Resource.Status.SUCCESS;
 
 public class BottomSheetCities extends BottomSheetDialogFragment implements CityClick {
     private MapViewModel viewModel;
@@ -31,40 +36,45 @@ public class BottomSheetCities extends BottomSheetDialogFragment implements City
     public void setupDialog(@NonNull Dialog dialog, int style) {
         super.setupDialog(dialog, style);
         View contentView = View.inflate(getContext(), R.layout.bottom_sheet_cities_layout, null);
+
         initCitiesList(contentView);
+
         viewModel = ViewModelProviders.of(this).get(MapViewModel.class);
         viewModel.getCitiesList(-20.3119172, -40.2862623);
-        viewModel.cities.observe(this, new Observer<Resource<List<City>>>() {
+        viewModel.cities.observe(this, new Observer<Resource<List<CityDomainObject>>>() {
             @Override
-            public void onChanged(Resource<List<City>> cities) {
+            public void onChanged(Resource<List<CityDomainObject>> cities) {
                 Log.d("requestlog", "BottomSheet, onChanged()");
-                switch(cities.status) {
-                    case SUCCESS:
-                        Log.d("requestlog", "BottomSheet, case SUCCESS");
-                        passDataToRecyclerView(cities.data);
-                        break;
-                    case LOADING:
-                        Log.d("requestlog", "BottomSheet, case SUCCESS");
-                        break;
-                    case ERROR:
-                        // code block
-                        break;
-                    default:
-                        // code block
-                }
+               handleResponse(cities);
             }
         });
         dialog.setContentView(contentView);
     }
 
-    private void passDataToRecyclerView(List<City> cities) {
+    private void handleResponse(Resource<List<CityDomainObject>> cities) {
+        switch(cities.status) {
+            case SUCCESS:
+                Log.d("requestlog", "BottomSheet, case SUCCESS");
+                passDataToRecyclerView(cities.data);
+                break;
+            case LOADING:
+                Log.d("requestlog", "BottomSheet, case SUCCESS");
+                break;
+            case ERROR:
+                // code block
+                break;
+            default:
+                // code block
+        }
+    }
+
+    private void passDataToRecyclerView(List<CityDomainObject> cities) {
         adapter.setCities(cities);
-        adapter.notifyDataSetChanged();
     }
 
     private void initCitiesList(View contentView) {
         CityClick cityClick = this;
-        List<City> citiesList = new ArrayList<City>();
+        List<CityDomainObject> citiesList = new ArrayList<>();
         recyclerView = contentView.findViewById(R.id.rv_cities);
         adapter = new CitiesAdapter(getContext(), cityClick, citiesList);
         recyclerView.setAdapter(adapter);
@@ -72,11 +82,11 @@ public class BottomSheetCities extends BottomSheetDialogFragment implements City
     }
 
     @Override
-    public void onCityClick(String city, double maxTemp, double minTemp, String weatherDescription) {
+    public void onCityClick(String city, double minTemp, double maxTemp, String weatherDescription) {
         Intent intent = new Intent(getContext(), CityInfotmationActivity.class);
         intent.putExtra(CityInfotmationActivity.CITY_NAME, city);
-        intent.putExtra(CityInfotmationActivity.MAX_TEMP, maxTemp);
         intent.putExtra(CityInfotmationActivity.MIN_TEMP, minTemp);
+        intent.putExtra(CityInfotmationActivity.MAX_TEMP, maxTemp);
         intent.putExtra(CityInfotmationActivity.WEATHER_DESCRIPTION, weatherDescription);
         startActivity(intent);
     }

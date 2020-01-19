@@ -8,6 +8,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.lacourt.mapscase.data.CitiesList;
 import com.lacourt.mapscase.data.City;
+import com.lacourt.mapscase.domainobjects.CityDomainObject;
+import com.lacourt.mapscase.domainobjects.MapFunction;
 import com.lacourt.mapscase.network.ApiFactory;
 import com.lacourt.mapscase.network.Resource;
 
@@ -18,7 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MapRepository {
-    public MutableLiveData<Resource<List<City>>> cities;
+    public MutableLiveData<Resource<List<CityDomainObject>>> cities;
 
     public MapRepository(){
         this.cities = new MutableLiveData();
@@ -27,15 +29,16 @@ public class MapRepository {
     public void getCitiesList(double latitude, double longitude){
         Log.d("requestlog", "repository, getCitiesList()");
         cities.setValue(
-                new Resource<List<City>>(Resource.Status.LOADING, null, null)
+                new Resource<List<CityDomainObject>>(Resource.Status.LOADING, null, null)
         );
         ApiFactory.getWeatherApi().getCitiesList(latitude, longitude, 15).enqueue(new Callback<CitiesList>() {
             @Override
             public void onResponse(Call<CitiesList> call, Response<CitiesList> response) {
                 if(response.isSuccessful()){
                     if(response.body() != null){
+
                         cities.setValue(
-                                new Resource<>(Resource.Status.SUCCESS, response.body().getCities(), null)
+                                new Resource<>(Resource.Status.SUCCESS, MapFunction.mapCitiesLis(response.body().getCities()), null)
                         );
                     }
                 } else {

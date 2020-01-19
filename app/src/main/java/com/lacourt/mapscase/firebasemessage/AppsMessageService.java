@@ -45,7 +45,6 @@ public class AppsMessageService extends FirebaseMessagingService {
             }
         }
 
-
     }
 
     private void presentRegularFCMNotification(RemoteMessage remoteMessage) {

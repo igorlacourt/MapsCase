@@ -14,6 +14,7 @@ import com.lacourt.mapscase.R;
 import com.lacourt.mapscase.data.City;
 import com.lacourt.mapscase.data.Main;
 import com.lacourt.mapscase.data.Weather;
+import com.lacourt.mapscase.domainobjects.CityDomainObject;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -21,10 +22,10 @@ import java.util.List;
 
 public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHolder> {
     private Context context;
-    private List<City> cities;
+    private List<CityDomainObject> cities;
     private CityClick cityClick;
 
-    public CitiesAdapter(Context context, CityClick cityClick, List<City> cities) {
+    public CitiesAdapter(Context context, CityClick cityClick, List<CityDomainObject> cities) {
         this.context = context;
         this.cityClick = cityClick;
         this.cities = cities;
@@ -38,49 +39,19 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CityViewHolder holder, final int position) {
-        final City city = cities.get(position);
-        String name = "Nome da cidade não disponível";
-        double maxTemp = 0.0;
-        double minTemp = 0.0;
-        String description = "Descrição do clima não disponível";
-
-        if (city != null) {
-            if(city.getName() != null) {
-                name = city.getName();
-            }
-            if(city.getMain() != null) {
-                if(city.getMain().getTempMax() != null){
-                    maxTemp = city.getMain().getTempMax();
-                }
-                if(city.getMain().getTempMin() != null) {
-                    minTemp = city.getMain().getTempMin();
-                }
-            }
-        }
-
-        if(city.getWeather() != null &&
-                city.getWeather().get(0) != null &&
-                city.getWeather().get(0).getDescription() != null &&
-                !city.getWeather().get(0).getDescription().isEmpty()
-        ){
-            description = city.getWeather().get(0).getDescription();
-        }
+        final CityDomainObject city = cities.get(position);
 
         holder.cityName.setText(city.getName());
 
-        final String finalName = name;
-        final double finalMaxTemp = maxTemp;
-        final double finalMinTemp = minTemp;
-        final String finalDescription = description;
         holder.cityItemLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 cityClick.onCityClick(
-                        finalName,
-                        finalMaxTemp,
-                        finalMinTemp,
-                        finalDescription
+                        city.getName(),
+                        city.getTempMin(),
+                        city.getTempMax(),
+                        city.getDescription()
                         );
 
             }
@@ -92,8 +63,11 @@ public class CitiesAdapter extends RecyclerView.Adapter<CitiesAdapter.CityViewHo
         return cities.size();
     }
 
-    public void setCities(List<City> cities) {
-        this.cities = cities;
+    public void setCities(List<CityDomainObject> cities) {
+        if(cities != null && !cities.isEmpty()) {
+            this.cities = cities;
+            notifyDataSetChanged();
+        }
     }
 
     public class CityViewHolder extends RecyclerView.ViewHolder {

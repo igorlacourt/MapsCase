@@ -64,9 +64,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Button btnSearch = (Button) findViewById(R.id.btn_search);
+        Button btnSearch = findViewById(R.id.btn_search);
         btnSearchClick(btnSearch);
-
     }
 
     private void initInLoco() {

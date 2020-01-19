@@ -1,6 +1,7 @@
 package com.lacourt.mapscase.data;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,10 +11,13 @@ public class Main {
 @Expose
 private Double temp;
 @Expose
+@SerializedName("feels_like")
 private Double feelsLike;
 @Expose
+@SerializedName("temp_min")
 private Double tempMin;
 @Expose
+@SerializedName("temp_max")
 private Double tempMax;
 @Expose
 private Integer pressure;
