@@ -51,7 +51,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int LOCATION_REQUEST_CODE = 1;
     private GoogleMap mMap;
-    private LatLng latLng;
+    private double latitude;
+    private double longitude;
     private Marker marker;
     Geocoder geocoder;
 
@@ -59,9 +60,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+
         mapFragment.getMapAsync(this);
 
         Button btnSearch = findViewById(R.id.btn_search);
@@ -71,15 +73,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void initInLoco() {
         // Set initialization options
         InLocoEngagementOptions options = InLocoEngagementOptions.getInstance(this);
-
         // The App ID you obtained in the dashboard
         options.setApplicationId(BuildConfig.IN_LOCO_APP_ID);
-
-        // Verbose mode; enables SDK logging, defaults to true.
         // Remember to set to false in production builds.
         options.setLogEnabled(true);
-
-        //Initialize the SDK
         InLocoEngagement.init(this, options);
     }
 
@@ -87,8 +84,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomSheetCities bottomSheet = new BottomSheetCities();
-                bottomSheet.show(getSupportFragmentManager(), bottomSheet.getTag());
+                BottomSheetCities.newInstance(latitude, longitude)
+                        .show(getSupportFragmentManager(), BottomSheetCities.TAG);
             }
         });
     }
@@ -110,9 +107,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @SuppressLint("MissingPermission")
             Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
             if(location != null){
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                currentLocation = new LatLng(longitude, latitude);
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                currentLocation = new LatLng(latitude, longitude);
             }
         }
 
@@ -130,25 +127,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onMapClick(LatLng latLng) {
-
                 // Creating a marker
                 MarkerOptions markerOptions = new MarkerOptions();
-
                 // Setting the position for the marker
                 markerOptions.position(latLng);
-
                 // Setting the title for the marker.
                 // This will be displayed on taping the marker
                 markerOptions.title(latLng.latitude + " : " + latLng.longitude);
-
                 // Clears the previously touched position
                 mMap.clear();
-
                 // Animating to the touched position
                 mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
                 // Placing a marker on the touched position
                 mMap.addMarker(markerOptions);
+
+                //set the current latitude and longitude
+                latitude = latLng.latitude;
+                longitude = latLng.longitude;
             }
         });
     }
@@ -252,53 +247,4 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .show();
     }
 
-//    private void setUpMapIfNeeded() {
-//        // Do a null check to confirm that we have not already instantiated the map.
-//        if (mMap == null) {
-//            // Try to obtain the map from the SupportMapFragment.
-//            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-//                    .findFragmentById(R.id.map);
-//
-//            if (mapFragment != null)
-//                mapFragment.getMapAsync(this);
-//
-//
-//        }
-//    }
 }
-
-//        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-//
-//            @Override
-//            public void onMapClick(LatLng point) {
-//                //save current location
-//                latLng = point;
-//
-//                City<Address> addresses = new ArrayList<>();
-//                try {
-//                    addresses = geocoder.getFromLocation(point.latitude, point.longitude,1);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                android.location.Address address = addresses.get(0);
-//
-//                if (address != null) {
-//                    StringBuilder sb = new StringBuilder();
-//                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++){
-//                        sb.append(address.getAddressLine(i) + "\n");
-//                    }
-//                    Toast.makeText(MapsActivity.this, sb.toString(), Toast.LENGTH_LONG).show();
-//                }
-//
-//                //remove previously placed Marker
-//                if (marker != null) {
-//                    marker.remove();
-//                }
-//
-//                //place marker where user just clicked
-//                marker = mMap.addMarker(new MarkerOptions().position(point).title("Marker")
-//                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-//
-//            }
-//        });

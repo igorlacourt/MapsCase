@@ -2,6 +2,7 @@ package com.lacourt.mapscase.ui;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
@@ -28,6 +29,9 @@ import static com.lacourt.mapscase.network.Resource.Status.LOADING;
 import static com.lacourt.mapscase.network.Resource.Status.SUCCESS;
 
 public class BottomSheetCities extends BottomSheetDialogFragment implements CityClick {
+    private static final String BUNDLE_LATITUTDE = "com.lacourt.mapscase.ui.latitude";
+    private static final String BUNDLE_LONGITUDE = "com.lacourt.mapscase.ui.longitude";
+    public static final String TAG = "com.lacourt.mapscase.ui.BottomSheetCities.TAG";
     private MapViewModel viewModel;
     private RecyclerView recyclerView;
     private CitiesAdapter adapter;
@@ -39,8 +43,11 @@ public class BottomSheetCities extends BottomSheetDialogFragment implements City
 
         initCitiesList(contentView);
 
+        double latitude = getArguments().getDouble(BUNDLE_LATITUTDE);
+        double longitude = getArguments().getDouble(BUNDLE_LONGITUDE);
+
         viewModel = ViewModelProviders.of(this).get(MapViewModel.class);
-        viewModel.getCitiesList(-20.3119172, -40.2862623);
+        viewModel.getCitiesList(latitude, longitude);
         viewModel.cities.observe(this, new Observer<Resource<List<CityDomainObject>>>() {
             @Override
             public void onChanged(Resource<List<CityDomainObject>> cities) {
@@ -89,5 +96,15 @@ public class BottomSheetCities extends BottomSheetDialogFragment implements City
         intent.putExtra(CityInfotmationActivity.MAX_TEMP, maxTemp);
         intent.putExtra(CityInfotmationActivity.WEATHER_DESCRIPTION, weatherDescription);
         startActivity(intent);
+    }
+
+    public static BottomSheetCities newInstance(double lat, double lon) {
+        BottomSheetCities bottomSheetFragment = new BottomSheetCities();
+        Bundle bundle = new Bundle();
+        bundle.putDouble(BUNDLE_LATITUTDE, lat);
+        bundle.putDouble(BUNDLE_LONGITUDE, lon);
+        bottomSheetFragment.setArguments(bundle);
+
+        return bottomSheetFragment ;
     }
 }
