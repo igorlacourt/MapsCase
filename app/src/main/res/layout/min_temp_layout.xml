@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_min_temp_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/minima"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_min_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:textSize="@dimen/text_large"
+        app:layout_constraintStart_toStartOf="@+id/tv_min_temp_title"
+        app:layout_constraintTop_toBottomOf="@+id/tv_min_temp_title"
+        tools:text="19" />
+
+    <TextView
+        android:id="@+id/tv_unit_min_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/celsius_unit"
+        android:textSize="@dimen/text_medium"
+        app:layout_constraintStart_toEndOf="@+id/tv_min_temp"
+        app:layout_constraintTop_toTopOf="@+id/tv_min_temp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,14 +34,17 @@ public class CityInfotmationActivity extends AppCompatActivity {
         String sWeatherDescription = intent.getStringExtra(WEATHER_DESCRIPTION);
 
         if(dMinTemp == DEFAULT_VALUE_FOR_NULL_CASE){
-            //TODO implement a textview for the of null content
+            minTemp.setText(" - ");
+        } else {
+            minTemp.setText(String.valueOf(dMinTemp));
         }
         if(dMaxTemp == DEFAULT_VALUE_FOR_NULL_CASE){
-            //TODO implement a textview for the of null content
+            maxTemp.setText(" - ");
+        } else {
+            maxTemp.setText(String.valueOf(dMaxTemp));
         }
         cityName.setText(sCityName);
-        maxTemp.setText(String.valueOf(dMaxTemp));
-        minTemp.setText(String.valueOf(dMinTemp));
+
         weatherDesrcription.setText(sWeatherDescription);
     }
 

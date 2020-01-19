@@ -2,4 +2,7 @@
     <string name="app_name">Maps Case</string>
     <string name="title_activity_maps">Map</string>
     <string name="btn_search">Buscar</string>
+    <string name="celsius_unit">ºC</string>
+    <string name="minima">Minimum</string>
+    <string name="maxima">Maximum</string>
 </resources>
