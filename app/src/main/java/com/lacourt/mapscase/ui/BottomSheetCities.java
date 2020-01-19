@@ -82,7 +82,7 @@ public class BottomSheetCities extends BottomSheetDialogFragment implements City
     }
 
     @Override
-    public void onCityClick(String city, double minTemp, double maxTemp, String weatherDescription) {
+    public void onCityClick(String city, Integer minTemp, Integer maxTemp, String weatherDescription) {
         Intent intent = new Intent(getContext(), CityInfotmationActivity.class);
         intent.putExtra(CityInfotmationActivity.CITY_NAME, city);
         intent.putExtra(CityInfotmationActivity.MIN_TEMP, minTemp);

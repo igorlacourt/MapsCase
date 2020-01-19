@@ -1,5 +1,5 @@
 package com.lacourt.mapscase.ui.adapter;
 
 public interface CityClick {
-    void onCityClick(String city, double minTemp, double maxTemp, String weatherDescription);
+    void onCityClick(String city, Integer minTemp, Integer maxTemp, String weatherDescription);
 }

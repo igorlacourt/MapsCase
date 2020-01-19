@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapFunction {
-    public static List<CityDomainObject> mapCitiesLis(List<City> cities){
+    public static List<CityDomainObject> mapCitiesList(List<City> cities){
         List<CityDomainObject> domainCities = new ArrayList();
         for(int i = 0; i < cities.size(); i++){
             City city = cities.get(i);

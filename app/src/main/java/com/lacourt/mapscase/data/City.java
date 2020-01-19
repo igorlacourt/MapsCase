@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class City {
-
     @Expose
     private Integer id;
     @Expose

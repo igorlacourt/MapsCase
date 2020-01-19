@@ -38,7 +38,7 @@ public class MapRepository {
                     if(response.body() != null){
 
                         cities.setValue(
-                                new Resource<>(Resource.Status.SUCCESS, MapFunction.mapCitiesLis(response.body().getCities()), null)
+                                new Resource<>(Resource.Status.SUCCESS, MapFunction.mapCitiesList(response.body().getCities()), null)
                         );
                     }
                 } else {

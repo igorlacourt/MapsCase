@@ -14,7 +14,7 @@ public class CityInfotmationActivity extends AppCompatActivity {
     public static final String MAX_TEMP = "com.lacourt.mapscase.ui.CityInfotmationActivity.maxtemp";
     public static final String MIN_TEMP = "com.lacourt.mapscase.ui.CityInfotmationActivity.mintemp";
     public static final String WEATHER_DESCRIPTION = "com.lacourt.mapscase.ui.CityInfotmationActivity.cityname";
-    private final double DEFAULT_VALUE_FOR_NULL_CASE = 10000.0;
+    private final int DEFAULT_VALUE_FOR_NULL_CASE = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,8 @@ public class CityInfotmationActivity extends AppCompatActivity {
         TextView weatherDesrcription = findViewById(R.id.tv_weather_description);
 
         String sCityName = intent.getStringExtra(CITY_NAME);
-        double dMinTemp = intent.getDoubleExtra(MIN_TEMP, DEFAULT_VALUE_FOR_NULL_CASE);
-        double dMaxTemp = intent.getDoubleExtra(MAX_TEMP, DEFAULT_VALUE_FOR_NULL_CASE);
+        int dMinTemp = intent.getIntExtra(MIN_TEMP, DEFAULT_VALUE_FOR_NULL_CASE);
+        int dMaxTemp = intent.getIntExtra(MAX_TEMP, DEFAULT_VALUE_FOR_NULL_CASE);
         String sWeatherDescription = intent.getStringExtra(WEATHER_DESCRIPTION);
 
         if(dMinTemp == DEFAULT_VALUE_FOR_NULL_CASE){
